@@ -75,7 +75,7 @@ processSections verbose rcth rch = do
           if "#" `isPrefixOf` l -- TODO whitespace before comment
             then getLineSkipComment
             else pure l
-          
+
     processSections' :: Property -> IO ()
     processSections' line' = do
       (eof', line'', sect) <- getSection (False, line', [])
@@ -131,6 +131,7 @@ processSections verbose rcth rch = do
         getCertificateFingerprint :: String -> IO (Maybe String)
         getCertificateFingerprint rh' = do
           let rh'' = getBaseRemoteHost rh'
+          putStrLn rh''
           let cmd = T.pack $ cmdPrefix ++ " " ++ rh'' ++ cmdPostfix
           cmdOut <- fold (inshell cmd empty) Fold.head
           let crs = getCmdResult cmdOut
@@ -140,14 +141,21 @@ processSections verbose rcth rch = do
             else pure Nothing
           where
             getBaseRemoteHost :: String -> String
-            getBaseRemoteHost r = do
-              let rphs = publicSuffix r -- TODO public suffix can contain dots...
-              let rs = T.split (== '.') (T.pack r)
-              let lrs = T.unpack $ last rs
-              let lrsb = T.unpack (last $ init rs)
-              if lrs == rphs
-                then lrsb ++ "." ++ lrs
-                else r
+            getBaseRemoteHost rh = do
+              let srh = T.split (== '.') (T.pack rh)
+              let ps = publicSuffix rh
+              let sps = T.split (== '.') (T.pack ps)
+              if checkPublicSuffix srh sps
+                then do
+                  let i = length srh - length sps - 1
+                  let bd = T.unpack $ srh !! i
+                  bd ++ "." ++ ps
+                else rh
+              where
+                checkPublicSuffix :: [Text] -> [Text] -> Bool
+                checkPublicSuffix srh' sps' =
+                  foldr (\c acc -> (&&) acc (fst c == snd c)) True $
+                    zip (reverse srh') (reverse sps')
 
         writeSection :: Section -> Maybe String -> IO ()
         writeSection s mc = do
