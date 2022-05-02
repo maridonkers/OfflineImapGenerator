@@ -154,7 +154,7 @@ processSections verbose rcth rch = do
               where
                 checkPublicSuffix :: [Text] -> [Text] -> Bool
                 checkPublicSuffix srh' sps' =
-                  foldr (\c acc -> (&&) acc (fst c == snd c)) True $
+                  foldr (\c acc -> (&&) acc (uncurry (==) c)) True $
                     zip (reverse srh') (reverse sps')
 
         writeSection :: Section -> Maybe String -> IO ()
