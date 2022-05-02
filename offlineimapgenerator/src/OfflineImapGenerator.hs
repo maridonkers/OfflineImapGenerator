@@ -107,7 +107,6 @@ processSections verbose rcth rch = do
     processSection section' = do
       let remoteHost = getRemoteHost section'
       when (verbose) $ do
-        echo "Section:"
         print section'
       if isJust remoteHost
         then do
