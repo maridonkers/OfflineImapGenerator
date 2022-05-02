@@ -1,1 +1,5 @@
-See: https://github.com/maridonkers/OfflineImapGenerator
+Generator for offlineimap that updates certificate fingerprints by
+reading a template file and writing a result file (with updated
+fingerprints).
+    
+See: [[https://photonsphere.org/posts/2022-05-02-offlineimap-rc-generator.html][A generator that updates cert_fingerprints in .offlineimaprc]]
