@@ -141,7 +141,7 @@ processSections verbose rcth rch = do
           where
             getBaseRemoteHost :: String -> String
             getBaseRemoteHost r = do
-              let rphs = publicSuffix r
+              let rphs = publicSuffix r -- TODO public suffix can contain dots...
               let rs = T.split (== '.') (T.pack r)
               let lrs = T.unpack $ last rs
               let lrsb = T.unpack (last $ init rs)
