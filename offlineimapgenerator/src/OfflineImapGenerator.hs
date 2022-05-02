@@ -106,7 +106,7 @@ processSections verbose rcth rch = do
     processSection :: Section -> IO ()
     processSection section' = do
       let remoteHost = getRemoteHost section'
-      when (verbose) $ do
+      when verbose $ do
         print section'
       if isJust remoteHost
         then do
@@ -161,7 +161,7 @@ processSections verbose rcth rch = do
                   let ic = T.isInfixOf (T.pack certFingerprintKey) (T.pack p)
                   let p' =
                         if ic then certFingerprintKey ++ " = " ++ c else p
-                  when (ic) $ putStrLn p'
+                  when ic $ putStrLn p'
                   hPutStrLn rch p'
                 else hPutStrLn rch p
 
