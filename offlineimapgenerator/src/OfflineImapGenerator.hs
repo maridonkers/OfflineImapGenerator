@@ -30,21 +30,8 @@ cmdPrefix = "openssl s_client -connect"
 cmdPostfix :: String
 cmdPostfix = ":443 < /dev/null 2>/dev/null | openssl x509 -fingerprint -noout -in /dev/stdin"
 
-generate :: String -> Bool -> IO ()
-generate home verbose = do
-  rcth <- openFile (prefixPathWith home offlineImaprcTemplate) ReadMode
-  rch <- openFile (prefixPathWith home offlineImaprc) WriteMode
-  finally
-    (processSections verbose rcth rch)
-    ( do
-        hClose rch
-        hClose rcth
-        echo "Done."
-    )
-  where
-    prefixPathWith :: String -> System.IO.FilePath -> System.IO.FilePath
-    prefixPathWith home path =
-      home ++ "/" ++ path
+trim :: String -> String
+trim s = T.unpack $ T.strip $ T.pack s
 
 getCmdResult :: Maybe Line -> String
 getCmdResult response =
@@ -173,5 +160,18 @@ processSections verbose rcth rch = do
                   hPutStrLn rch p'
                 else hPutStrLn rch p
 
-trim :: String -> String
-trim s = T.unpack $ T.strip $ T.pack s
+generate :: String -> Bool -> IO ()
+generate home verbose = do
+  rcth <- openFile (prefixPathWith home offlineImaprcTemplate) ReadMode
+  rch <- openFile (prefixPathWith home offlineImaprc) WriteMode
+  finally
+    (processSections verbose rcth rch)
+    ( do
+        hClose rch
+        hClose rcth
+        echo "Done."
+    )
+  where
+    prefixPathWith :: String -> System.IO.FilePath -> System.IO.FilePath
+    prefixPathWith home path =
+      home ++ "/" ++ path
