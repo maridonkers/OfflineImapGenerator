@@ -59,7 +59,7 @@ processSections verbose rcth rch = do
         then pure ""
         else do
           l <- hGetLine rcth
-          if "#" `isPrefixOf` l -- TODO whitespace before comment
+          if "#" `isPrefixOf` trim l
             then getLineSkipComment
             else pure l
 
@@ -85,7 +85,7 @@ processSections verbose rcth rch = do
             else getSection (False, prop', prop : sect)
 
     isSection :: Property -> Bool
-    isSection p = "[" `isPrefixOf` p -- TODO whitespace before the `[` character
+    isSection p = "[" `isPrefixOf` trim p
     getLastSect :: Property -> Section -> Section
     getLastSect p s =
       if isSection p then s else p : s
