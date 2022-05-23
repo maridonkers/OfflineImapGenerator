@@ -11,12 +11,12 @@ data Args = Args Bool
 
 args :: OA.Parser Args
 args =
-  Args --TODO
-    <$> OA.switch
-      ( OA.long "verbose"
-          <> OA.short 'v'
-          <> OA.help "Be verbose."
-      )
+    Args --TODO
+        <$> OA.switch
+            ( OA.long "verbose"
+                <> OA.short 'v'
+                <> OA.help "Be verbose."
+            )
 
 -- <*> OA.strArgument
 -- (OA.metavar "another" <> OA.help "Another argument")
@@ -26,6 +26,6 @@ argsInfo = OA.info args OA.fullDesc
 
 main :: IO ()
 main = do
-  Args verbose <- OA.execParser argsInfo
-  home <- getEnv "HOME"
-  generate home verbose
+    Args verbose <- OA.execParser argsInfo
+    home <- getEnv "HOME"
+    generate home verbose
