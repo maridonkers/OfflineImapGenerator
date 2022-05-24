@@ -16,13 +16,10 @@ edit:
 	emacs &
 
 build:
-	hpack
 	cabal build
 
 rebuild:
 	cabal clean
-	rm -f $(PROJECT).cabal
-	hpack
 	cabal build
 
 update:
@@ -47,7 +44,7 @@ lint:
 	ag --haskell -l | xargs hlint -v
 
 formatter:
-	ag --haskell -l | xargs stylish-haskell -i
+	ag --haskell -l | xargs fourmolu -i
 
 help:
 	@grep '^[^ 	#:]\+:' Makefile | sed -e 's/:[^:]*//g'
